@@ -1,125 +1,168 @@
-# mouli : le génie des 1001 nuits (testeur libft, sujet v19.3)
+# The 1001 Tester (mouli): libft tester for the 42 subject v19.3
 
-Testeur **non officiel** pour la Libft de 42, version du sujet **19.3**. Deux commandes :
+An **unofficial** tester for the 42 Libft, subject version **19.3**. Two commands:
 
-| Commande | Ce qu'elle fait |
+| Command | What it does |
 |---|---|
-| `mouli` | teste les 43 fonctions (**1001 tests**), le Makefile et `libft.h` |
-| `mouli-norm` | norminette (`.c` et `.h`) + toutes les règles du sujet qui touchent à la norme et au rendu |
+| `mouli` | tests the 43 functions (**1001 tests**), the Makefile and `libft.h` |
+| `mouli-norm` | norminette (`.c` and `.h`) + every subject rule about the norm and the submission |
 
-Le but : que tes fonctions se comportent **exactement** comme celles du `man` (pas « mieux »), et que tu saches précisément pourquoi un test échoue.
-
-## Le thème : les 1001 nuits
-
-`mouli`
-
-`mouli-norm`
-
-Tu préfères un affichage simple ? `mouli --sobre` et `mouli-norm --sobre` (ou `export MOULI_SOBRE=1` dans ton `~/.zshrc`).
+The goal: your functions should behave **exactly** like the `man` page (not "better"), and you should know precisely why a test fails.
 
 ---
 
-## Installation
+## Install
 
-Il faut `python3` (3.8 ou plus), `cc`, `make`, `ar`, `nm` : tout est déjà sur les postes 42.
+You need `python3` (3.8 or newer), `cc`, `make`, `ar`, `nm`: all of them are already on 42 computers.
 
 ```sh
 bash install_mouli.sh
 ```
 
-`install_mouli.sh` est un fichier unique qui contient tout le testeur. Il le copie dans `~/.mouli` et ajoute les alias `mouli` et `mouli-norm` à ton `~/.zshrc` (et `~/.bashrc` s'il existe). Ouvre ensuite un nouveau terminal, ou tape `source ~/.zshrc`.
+`install_mouli.sh` is a single file that holds the whole tester. It copies it to `~/.mouli` and adds the `mouli` and `mouli-norm` aliases to your `~/.zshrc` (and `~/.bashrc` if it exists). Then open a new terminal, or type `source ~/.zshrc`.
 
-- Avec l'archive à la place : `tar xzf mouli.tar.gz && bash mouli/install.sh`.
-- Mise à jour : relance l'installateur de la nouvelle version.
-- Désinstallation : `bash ~/.mouli/install.sh --uninstall` (supprime aussi les alias et le cache).
-- `mouli-norm` a besoin de la norminette. Si elle manque : `python3 -m pip install --user --upgrade norminette`.
+- With the archive instead: `tar xzf mouli.tar.gz && bash mouli/install.sh`.
+- Update: run the installer of the new version.
+- Uninstall: `bash ~/.mouli/install.sh --uninstall` (also removes the aliases and the cache).
+- `mouli-norm` needs norminette. If it is missing: `python3 -m pip install --user --upgrade norminette`.
 
-## Utilisation
+## Usage
 
 ```sh
-cd ~/chemin/vers/libft
-mouli                 # tout : Makefile, libft.h, parties 1, 2 et 3
-mouli -f split,itoa   # seulement certaines fonctions (avec ou sans ft_)
-mouli -p 2            # seulement la partie 2
-mouli -v              # détail de chaque test, y compris les cas non définis
-mouli --git           # teste le DERNIER COMMIT, c'est-à-dire ce que verra la moulinette
-mouli -q              # saute les tests longs du Makefile (relink, clean...)
-mouli --strict        # compte aussi les écarts sur les comportements indéfinis
-mouli-norm            # norminette + règles du sujet
-mouli-norm --git      # seulement les fichiers commités
-mouli --sobre         # sans le thème (pareil pour mouli-norm)
+cd ~/path/to/libft
+mouli                 # everything: Makefile, libft.h, parts 1, 2 and 3
+mouli -f split,itoa   # only some functions (with or without ft_)
+mouli -p 2            # only part 2
+mouli -v              # every failing test in full, plus the undefined cases
+mouli --git           # tests the LAST COMMIT, that is what the moulinette will see
+mouli -q              # skips the slow Makefile tests (relink, clean...)
+mouli --strict        # also counts differences on undefined behaviour
+mouli-norm            # norminette + subject rules
+mouli-norm --git      # only the committed files
+mouli --plain         # no big ASCII banners (same for mouli-norm)
 ```
 
-Autres options : `--timeout 5` (secondes par test, 3 par défaut), `--seed 7` (autre graine pour les tests aléatoires), `--no-color`, `--keep` (garde les binaires de test). Un log sans couleurs est écrit dans `~/.cache/mouli/dernier_test.log` (et `derniere_norme.log`).
+Other options: `--timeout 5` (seconds per test, 3 by default), `--seed 7` (another seed for the random tests), `--no-color`, `--keep` (keeps the test binaries). A log without colours is written to `~/.cache/mouli/last_test.log` (and `last_norm.log`).
 
-`mouli` ne modifie jamais ton dossier : il travaille sur une copie (pas de `.o` laissés derrière).
+`mouli` never changes your folder: it works on a copy (no `.o` files left behind).
 
-## Lire le résultat
+## Reading the output
 
 ```
-  ✔ ft_strlcat      OK    28/28  ••••••••••••••••••••••••••••
-  ✗ ft_substr       KO    30/35  •••S••••••SS•••••SS•••••••••••••••i
-    [CRASH] #4 len plus grand que ce qui reste : on s'arrête à la fin de s
-        Plantage     Segmentation fault (SIGSEGV)
-        Cause        accès hors limites : s[5] alors que s ne fait que 5 octets (1 octet après la fin)
-        Appel        ft_substr("hola", 2, 30)
-        Rappel       len est une longueur MAXIMALE : il ne reste que 2 caractères après start...
+   ██╗ ██████╗  ██████╗  ██╗    ╭────────────────────────────────────────────────────╮
+  ███║██╔═████╗██╔═████╗███║    │ THE 1001 TESTER  ·  mouli 2.2.0                    │
+  ╚██║██║██╔██║██║██╔██║╚██║    │ libft · subject v19.3 · 43 functions · 1001 tests  │
+   ██║████╔╝██║████╔╝██║ ██║    │ unofficial: does not replace the moulinette        │
+   ██║╚██████╔╝╚██████╔╝ ██║    │ mouli -h for the options · mouli-norm for the norm │
+   ╚═╝ ╚═════╝  ╚═════╝  ╚═╝    ╰────────────────────────────────────────────────────╯
 ```
 
-Chaque symbole est un test :
+The output has five parts, always in the same order:
 
-| Symbole | Signification | Compté |
+1. **One line per function** while the tests run, with one symbol per test.
+2. **FAILURES**: every function with a failing test gets its own block, with at most 3 failing tests in full (`mouli -f <name> -v` shows all of them). Each one says what was called, what was expected, what your function did, and **why** (the rule from the `man` page or the subject).
+3. **WARNINGS**: undefined behaviour that differs from libc, extra `malloc`, slowness. Not counted, but each one is explained in full.
+4. **NOTES**: cases the subject does not define (`NULL` arguments...): what your function does, so you can defend your choice. Not counted.
+5. **SUMMARY**: Makefile, `libft.h` and each part, the list of **what failed** (function, how many tests, which ones), the functions with warnings, and a big **OK** or **KO** with the score.
+
+```
+━━ FAILURES  (1 function · why each one fails) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ── ft_strncmp · 7 failing tests ────────────────────────────────────────────────────────────────
+
+    KO      #12 · test 354/1001  byte > 127 against ASCII: compared as unsigned char
+      › Return value: wrong sign
+        Call           ft_strncmp("\x80", "a", 1)
+        Expected       a positive result (libc returns 31)
+        Got            -225 (negative)
+        Why            Characters are compared as unsigned char: 0x80 (128) is greater than 'a'
+                       (97).
+
+
+━━ SUMMARY ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Makefile  ✔ 8/8 checks
+  libft.h   ✔ 4/4 checks
+  Part 1    ✗ 22/23 functions    564/571 tests
+  Part 2    ✔ 11/11 functions    292/292 tests
+  Part 3    ✔ 9/9 functions      138/138 tests
+  Tests     994/1001 passed   · 4 warnings, 25 notes (not counted)
+
+  What failed
+    ✗ ft_strncmp      7 of 32 tests failed   #12 #13 #14 #15 #19 #20 #23
+
+  Warnings in  ft_memmove, ft_toupper, ft_tolower, ft_atoi   (see WARNINGS above)
+
+  ██╗  ██╗ ██████╗ 
+  ██║ ██╔╝██╔═══██╗     ✗ 0/100 
+  █████╔╝ ██║   ██║
+  ██╔═██╗ ██║   ██║    First error at test 354/1001:
+  ██║  ██╗╚██████╔╝    ft_strncmp #12  byte > 127 against ASCII: compared as unsigned char
+  ╚═╝  ╚═╝ ╚═════╝     Like the moulinette: one error gives 0.
+```
+
+Each symbol is one test:
+
+| Symbol | Meaning | Counted |
 |---|---|---|
 | `•` | OK | |
-| `✗` | mauvais résultat (attendu / obtenu affichés, octets différents surlignés) | oui |
-| `S` | plantage (segfault, bus error, abort, double free...) avec la cause exacte | oui |
-| `T` | timeout : boucle infinie probable | oui |
-| `L` | fuite mémoire (taille, contenu du bloc, appel qui l'a allouée) | oui |
-| `M` | mauvais comportement quand un `malloc` échoue (pas `NULL`, fuite, crash) | oui |
-| `O` | ta fonction écrit sur la sortie standard (un `printf` de debug oublié) | oui |
-| `!` | avertissement : comportement indéfini différent de la libc, `malloc` plus grand que nécessaire, lenteur | non |
-| `i` | information : cas que le sujet ne définit pas (ex : `NULL`), visible avec `-v` | non |
+| `✗` | wrong result (expected / got shown, differing bytes highlighted) | yes |
+| `S` | crash (segfault, bus error, abort, double free...) with the exact cause | yes |
+| `T` | timeout: probably an infinite loop | yes |
+| `L` | memory leak (size, content of the block, call that allocated it) | yes |
+| `M` | wrong behaviour when a `malloc` fails (not `NULL`, leak, crash) | yes |
+| `O` | your function writes to standard output (a forgotten debug `printf`) | yes |
+| `!` | warning: undefined behaviour different from libc, `malloc` larger than needed, slowness | no |
+| `i` | note: case the subject does not define (e.g. `NULL`), listed in NOTES | no |
 
-Le résumé final imite la moulinette : **100/100 si tout passe, 0/100 à la première erreur** (et il te dit laquelle, avec le numéro de la nuit fatale).
+Like the moulinette, the result is **100/100 if everything passes, 0/100 at the first error**, and it tells you which one.
 
-Répartition des 1001 tests : partie 1 : 571, partie 2 : 292, partie 3 : 138.
+The 1001 tests are split as part 1: 571, part 2: 292, part 3: 138.
 
-## Ce qui est testé
+### The look
 
-**Moteur.** Chaque test tourne dans son propre processus : un crash ou une boucle infinie ne fait jamais tomber le testeur.
-- Chaque buffer passé à ta fonction est collé à une page mémoire protégée : lire ou écrire **un seul octet** de trop fait planter, et le rapport dit quel octet de quel paramètre (ex : `dst[8] alors que dst ne fait que 8 octets`). Les paramètres `const` sont en lecture seule : y écrire est signalé.
-- Chaque `malloc` fait pendant ta fonction est surveillé : dépassement de bloc, utilisation après `free`, double `free`, `free` d'un pointeur qui n'a pas été alloué, fuites (avec le contenu du bloc perdu).
-- Échecs de `malloc` : pour chaque fonction qui alloue, le testeur fait échouer le 1er `malloc`, puis le 2e, etc. Ta fonction doit renvoyer `NULL` **et** libérer ce qu'elle avait déjà alloué (`ft_split`, `ft_lstmap`...).
-- Taille des allocations : un `malloc` plus grand que nécessaire est signalé en avertissement (certains correcteurs le vérifient).
-- Fonctions externes : le sujet dit que la partie 1 « must not rely on any external functions », et donne pour chaque fonction des parties 2 et 3 la liste « External functs. ». Un `malloc` ou un `free` pendant l'appel d'une fonction qui n'y a pas droit (même caché derrière une autre de tes `ft_`) est signalé en avertissement ; `mouli-norm` dit s'il est direct (fonction interdite) ou indirect.
+The header shows the big "1001" of **The 1001 Tester** (a big "NORM" for `mouli-norm`), the progress line counts the tests (`Test 245/1001  ft_strlcat  3/28`), and the summary ends with a big **OK** or **KO**. Colours: green for what passes, red for errors, amber for warnings, blue for notes (256 colours, with an automatic fallback to 16). The error explanations never depend on the look.
 
-**Partie 1.** Comparaison directe avec la vraie libc (`strlcpy`, `strlcat`, `strnstr` : la version BSD du système, de libbsd, ou un modèle fidèle au `man` BSD si aucune n'existe). Entre autres : valeurs de `c` hors de `[0, 255]` (`'a' + 256`, `-1`, `200`...), octets > 127 comparés en `unsigned char`, chevauchements de `memmove` dans les deux sens, `strlcat` quand `size` ≤ `strlen(dst)` ou quand `dst` n'a pas de `'\0'` dans ses `size` octets, `strnstr` avec `len` qui coupe le mot cherché, `atoi` avec tous les octets de 1 à 255 devant le nombre, `INT_MIN`, `calloc(0, 0)` (règle du sujet), dépassements de `nmemb * size`, et des milliers de cas aléatoires.
+Prefer a plain display? Use `--plain` (or `export MOULI_PLAIN=1` in your `~/.zshrc`): the header becomes plain text.
 
-**Partie 2.** Résultats attendus calculés avec la libc. `ft_substr` avec `start` après la fin ou `len = SIZE_MAX`, `ft_split` (séparateurs multiples, `c = '\0'`, chaque octet comme séparateur, tableau terminé par `NULL`, chaque mot alloué séparément), `ft_strtrim`, `ft_itoa(INT_MIN)`, les appels exacts reçus par `f` dans `ft_strmapi` et `ft_striteri` (indice, caractère, adresse dans `s`), le contenu exact écrit dans le fd par les `ft_put*_fd`.
+## What is tested
 
-**Partie 3.** Les listes sont **obligatoires** en v19.3 (`make` doit les compiler) et `ft_lstsize` renvoie un `unsigned int`. Le testeur vérifie l'ordre des nœuds, que `del` reçoit bien le contenu (et une seule fois), que `ft_lstdelone` ne libère pas le suivant, que `ft_lstclear` met `*lst` à `NULL`, que `ft_lstiter` appelle `f` sur chaque contenu (même `NULL`), que `ft_lstmap` ne touche pas la liste d'origine et ne fuit pas quand un `malloc` échoue (le contenu renvoyé par `f` doit passer par `del`, une seule fois, jamais celui de la liste d'origine). Les listes partent aussi d'un nœud au milieu, ont des contenus invalides (jamais lus), partagés ou `NULL`, et vont jusqu'à 70 000 nœuds.
+**Engine.** Each test runs in its own process: a crash or an infinite loop never takes the tester down.
+- Every buffer passed to your function is stuck to a protected memory page: reading or writing **a single byte** too far crashes, and the report says which byte of which parameter (e.g. `dst[8] while dst is only 8 bytes long`). `const` parameters are read-only: writing into them is reported.
+- Every `malloc` made during your function is watched: block overflow, use after `free`, double `free`, `free` of a pointer that was not allocated, leaks (with the content of the lost block).
+- `malloc` failures: for each function that allocates, the tester makes the 1st `malloc` fail, then the 2nd, and so on. Your function must return `NULL` **and** free what it had already allocated (`ft_split`, `ft_lstmap`...).
+- Allocation sizes: a `malloc` larger than needed is reported as a warning (some evaluators check it).
+- External functions: the subject says part 1 "must not rely on any external functions", and gives for each function of parts 2 and 3 its "External functs." list. A `malloc` or a `free` during a call to a function that may not use them (even hidden behind another of your `ft_` functions) is reported as a warning; `mouli-norm` tells you whether it is direct (forbidden function) or indirect.
 
-**Comportements indéfinis** (`NULL`, valeurs hors domaine...). Ta fonction et la libc tournent chacune dans leur processus et on compare : « plante », « boucle » ou « renvoie X ». Une différence s'affiche en `!` mais **n'est pas comptée** (sauf avec `--strict`), parce que le `man` ne définit pas ces cas.
+**Part 1.** Direct comparison with the real libc (`strlcpy`, `strlcat`, `strnstr`: the BSD version of the system, of libbsd, or a model faithful to the BSD `man` page if none exists). Among others: values of `c` outside `[0, 255]` (`'a' + 256`, `-1`, `200`...), bytes > 127 compared as `unsigned char`, `memmove` overlaps in both directions, `strlcat` when `size` ≤ `strlen(dst)` or when `dst` has no `'\0'` in its `size` bytes, `strnstr` with a `len` that cuts the word searched for, `atoi` with every byte from 1 to 255 in front of the number, `INT_MIN`, `calloc(0, 0)` (subject rule), `nmemb * size` overflows, and thousands of random cases.
 
-**Makefile.** `make` crée `libft.a`, règle par défaut `all`, règles `$(NAME) all clean fclean re`, `cc` avec `-Wall -Wextra -Werror` sur chaque `.c`, `ar` (pas `libtool`), pas de `-std=c99` ni de `-fsanitize`, sources listées sans wildcard, toutes les fonctions (listes comprises) dans `libft.a`, pas de relink (3 fois), recompilation d'un seul `.o` quand un `.c` change, `clean`, `fclean`, `re`.
+**Part 2.** Expected results computed with libc. `ft_substr` with `start` past the end or `len = SIZE_MAX`, `ft_split` (repeated separators, `c = '\0'`, each byte as a separator, array ended by `NULL`, each word allocated separately), `ft_strtrim`, `ft_itoa(INT_MIN)`, the exact calls received by `f` in `ft_strmapi` and `ft_striteri` (index, character, address inside `s`), the exact content written to the fd by the `ft_put*_fd` functions.
 
-**libft.h.** Compile seul (inclus deux fois) avec les flags, pas de `restrict`, `t_list` exactement comme le sujet, les 43 prototypes identiques au sujet v19.3.
+**Part 3.** Lists are **mandatory** in v19.3 (`make` must build them) and `ft_lstsize` returns an `unsigned int`. The tester checks the order of the nodes, that `del` gets the content (and only once), that `ft_lstdelone` does not free the next node, that `ft_lstclear` sets `*lst` to `NULL`, that `ft_lstiter` calls `f` on every content (even `NULL`), that `ft_lstmap` does not touch the original list and does not leak when a `malloc` fails (the content returned by `f` must go through `del`, exactly once, never the one of the original list). Lists also start from a node in the middle, have invalid (never read), shared or `NULL` contents, and go up to 70,000 nodes.
+
+**Undefined behaviour** (`NULL`, out-of-domain values...). Your function and libc each run in their own process and are compared: "crashes", "loops" or "returns X". A difference is shown as `!` but **is not counted** (except with `--strict`), because the `man` page does not define these cases.
+
+**Makefile.** `make` creates `libft.a`, default rule `all`, rules `$(NAME) all clean fclean re`, `cc` with `-Wall -Wextra -Werror` on each `.c`, `ar` (not `libtool`), no `-std=c99` nor `-fsanitize`, sources listed without wildcard, every function (lists included) in `libft.a`, no relink (3 times), only one `.o` rebuilt when a `.c` changes, `clean`, `fclean`, `re`.
+
+**libft.h.** Compiles alone (included twice) with the flags, no `restrict`, `t_list` exactly as in the subject, the 43 prototypes identical to the subject v19.3.
 
 ## mouli-norm
 
-- **Fichiers rendus** : seulement `Makefile`, `libft.h`, `README.md` et des `ft_*.c` à la racine. Signale les fichiers en trop (`main.c`, `.o`, `libft.a` commités...), les fichiers **pas suivis par git** (qui ne seront pas rendus), les changements non commités et les commits pas poussés.
-- **Norminette** sur tous les `.c` et `.h`, avec une explication en français de chaque erreur. Comme la moulinette, les `.c` sont aussi passés avec `-R CheckForbiddenSourceHeader` et les `.h` avec `-R CheckDefine` : le testeur indique si une erreur n'apparaît qu'avec la norminette normale (celle que tape un correcteur), et la compte quand même.
-- **Symboles** (chaque `.c` compilé seul, puis analysé avec `nm`) : fonctions externes interdites (chaque fonction n'a droit qu'à ce que liste « External Function » : `malloc`, `free`, `write` selon les cas), variables globales (même `static`), fonctions d'aide non `static`, `main` oublié, fonctions définies deux fois, usage indirect (ex : `ft_putnbr_fd` qui passe par `ft_itoa`, donc par `malloc`).
-- **Makefile** (lecture) et **libft.h**.
-- **README.md** (chapitre V du sujet) : première ligne en italique `*This project has been created as part of the 42 curriculum by <login>.*`, sections Description / Instructions / Resources, usage de l'IA décrit, description détaillée de la bibliothèque.
+Same layout as `mouli`: one line per group of checks, then **PROBLEMS** in full, then **WARNINGS** with their explanations, then the **SUMMARY** with the list of what failed and a big **OK** (`NORM OK`) or **KO** (`TO FIX`).
 
-## Limites
+- **Files**: only `Makefile`, `libft.h`, `README.md` and `ft_*.c` files at the root. Reports extra files (`main.c`, `.o`, committed `libft.a`...), files **not tracked by git** (they will not be submitted), uncommitted changes and commits not pushed.
+- **Norminette** on every `.c` and `.h`, with a plain-English explanation of each error. Like the moulinette, `.c` files are also run with `-R CheckForbiddenSourceHeader` and `.h` files with `-R CheckDefine`: the tester tells you if an error only shows with plain norminette (the one an evaluator types), and still counts it.
+- **Symbols** (each `.c` compiled alone, then read with `nm`): forbidden external functions (each function may only use what its "External functs." line lists: `malloc`, `free`, `write` depending on the function), global variables (even `static`), non-`static` helper functions, a forgotten `main`, functions defined twice, indirect use (e.g. `ft_putnbr_fd` going through `ft_itoa`, so through `malloc`).
+- **Makefile** (read only) and **libft.h**.
+- **README.md** (chapter V of the subject): first line in italics `*This project has been created as part of the 42 curriculum by <login>.*`, Description / Instructions / Resources sections, use of AI described, detailed description of the library.
 
-- C'est un testeur non officiel : il ne remplace pas la vraie moulinette ni une évaluation. Il est volontairement plus exigeant qu'elle.
-- Testé sous Linux (glibc 2.39, gcc et clang). Il est écrit pour fonctionner aussi sous macOS, mais n'y a pas encore été lancé.
-- Ta libft est compilée par ton propre Makefile, avec le `cc` de la machine. Lance `mouli` sur un poste 42 pour être dans les conditions de la moulinette : certains bugs ne se voient qu'avec un compilateur (par exemple, une division par zéro passe inaperçue avec gcc mais plante avec clang).
-- Les cas `NULL` de la partie 2 et 3 ne sont pas définis par le sujet : ils s'affichent en information, à toi de savoir défendre ton choix.
+## Limits
 
-## Règles du sujet sur l'IA
+- This is an unofficial tester: it does not replace the real moulinette or an evaluation. It is stricter on purpose.
+- Tested on Linux (glibc 2.39, gcc and clang). It is written to work on macOS too, but has not been run there yet.
+- Your libft is built by your own Makefile, with the machine's `cc`. Run `mouli` on a 42 computer to be in the moulinette's conditions: some bugs only show with one compiler (for example, a division by zero goes unnoticed with gcc but crashes with clang).
+- The `NULL` cases of parts 2 and 3 are not defined by the subject: they are shown as information, and it is up to you to defend your choice.
 
-Le sujet Libft demande de ne pas utiliser l'IA pour obtenir les réponses. Ce testeur ne contient **aucune solution** : les résultats attendus viennent de la vraie libc ou de valeurs écrites à la main, et les messages expliquent ce que dit le `man` ou le sujet, pas comment coder la fonction.
+## The subject's AI rules
+
+The Libft subject asks you not to use AI to get the answers. This tester holds **no solution**: the expected results come from the real libc or from values written by hand, and the messages explain what the `man` page or the subject says, not how to write the function.
