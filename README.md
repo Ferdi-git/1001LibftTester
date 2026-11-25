@@ -33,7 +33,7 @@ cd ~/path/to/libft
 mouli                 # everything: Makefile, libft.h, parts 1, 2 and 3
 mouli -f split,itoa   # only some functions (with or without ft_)
 mouli -p 2            # only part 2
-mouli -v              # every failing test in full, plus the undefined cases
+mouli -v              # every failing test in full, plus undefined behaviour and notes
 mouli --git           # tests the LAST COMMIT, that is what the moulinette will see
 mouli -q              # skips the slow Makefile tests (relink, clean...)
 mouli --strict        # also counts differences on undefined behaviour
@@ -50,20 +50,19 @@ Other options: `--timeout 5` (seconds per test, 3 by default), `--seed 7` (anoth
 
 ```
    ██╗ ██████╗  ██████╗  ██╗    ╭────────────────────────────────────────────────────╮
-  ███║██╔═████╗██╔═████╗███║    │ THE 1001 TESTER  ·  mouli 2.2.0                    │
+  ███║██╔═████╗██╔═████╗███║    │ THE 1001 TESTER  ·  mouli 2.2.1                    │
   ╚██║██║██╔██║██║██╔██║╚██║    │ libft · subject v19.3 · 43 functions · 1001 tests  │
    ██║████╔╝██║████╔╝██║ ██║    │ unofficial: does not replace the moulinette        │
    ██║╚██████╔╝╚██████╔╝ ██║    │ mouli -h for the options · mouli-norm for the norm │
    ╚═╝ ╚═════╝  ╚═════╝  ╚═╝    ╰────────────────────────────────────────────────────╯
 ```
 
-The output has five parts, always in the same order:
+The output has four parts, always in the same order:
 
 1. **One line per function** while the tests run, with one symbol per test.
 2. **FAILURES**: every function with a failing test gets its own block, with at most 3 failing tests in full (`mouli -f <name> -v` shows all of them). Each one says what was called, what was expected, what your function did, and **why** (the rule from the `man` page or the subject).
-3. **WARNINGS**: undefined behaviour that differs from libc, extra `malloc`, slowness. Not counted, but each one is explained in full.
-4. **NOTES**: cases the subject does not define (`NULL` arguments...): what your function does, so you can defend your choice. Not counted.
-5. **SUMMARY**: Makefile, `libft.h` and each part, the list of **what failed** (function, how many tests, which ones), the functions with warnings, and a big **OK** or **KO** with the score.
+3. **WARNINGS**: `malloc` larger than needed, slowness on big inputs. Not counted, but each one is explained in full.
+4. **SUMMARY**: Makefile, `libft.h` and each part, the list of **what failed** (function, how many tests, which ones), the functions with warnings, and a big **OK** or **KO** with the score.
 
 ```
 ━━ FAILURES  (1 function · why each one fails) ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -86,12 +85,10 @@ The output has five parts, always in the same order:
   Part 1    ✗ 22/23 functions    564/571 tests
   Part 2    ✔ 11/11 functions    292/292 tests
   Part 3    ✔ 9/9 functions      138/138 tests
-  Tests     994/1001 passed   · 4 warnings, 25 notes (not counted)
+  Tests     994/1001 passed
 
   What failed
     ✗ ft_strncmp      7 of 32 tests failed   #12 #13 #14 #15 #19 #20 #23
-
-  Warnings in  ft_memmove, ft_toupper, ft_tolower, ft_atoi   (see WARNINGS above)
 
   ██╗  ██╗ ██████╗ 
   ██║ ██╔╝██╔═══██╗     ✗ 0/100 
@@ -112,8 +109,7 @@ Each symbol is one test:
 | `L` | memory leak (size, content of the block, call that allocated it) | yes |
 | `M` | wrong behaviour when a `malloc` fails (not `NULL`, leak, crash) | yes |
 | `O` | your function writes to standard output (a forgotten debug `printf`) | yes |
-| `!` | warning: undefined behaviour different from libc, `malloc` larger than needed, slowness | no |
-| `i` | note: case the subject does not define (e.g. `NULL`), listed in NOTES | no |
+| `!` | warning: `malloc` larger than needed, slowness | no |
 
 Like the moulinette, the result is **100/100 if everything passes, 0/100 at the first error**, and it tells you which one.
 
@@ -121,7 +117,7 @@ The 1001 tests are split as part 1: 571, part 2: 292, part 3: 138.
 
 ### The look
 
-The header shows the big "1001" of **The 1001 Tester** (a big "NORM" for `mouli-norm`), the progress line counts the tests (`Test 245/1001  ft_strlcat  3/28`), and the summary ends with a big **OK** or **KO**. Colours: green for what passes, red for errors, amber for warnings, blue for notes (256 colours, with an automatic fallback to 16). The error explanations never depend on the look.
+The header shows the big "1001" of **The 1001 Tester** (a big "NORM" for `mouli-norm`), the progress line counts the tests (`Test 245/1001  ft_strlcat  3/28`), and the summary ends with a big **OK** or **KO**. Colours: green for what passes, red for errors, amber for warnings, (256 colours, with an automatic fallback to 16). The error explanations never depend on the look.
 
 Prefer a plain display? Use `--plain` (or `export MOULI_PLAIN=1` in your `~/.zshrc`): the header becomes plain text.
 
@@ -140,7 +136,7 @@ Prefer a plain display? Use `--plain` (or `export MOULI_PLAIN=1` in your `~/.zsh
 
 **Part 3.** Lists are **mandatory** in v19.3 (`make` must build them) and `ft_lstsize` returns an `unsigned int`. The tester checks the order of the nodes, that `del` gets the content (and only once), that `ft_lstdelone` does not free the next node, that `ft_lstclear` sets `*lst` to `NULL`, that `ft_lstiter` calls `f` on every content (even `NULL`), that `ft_lstmap` does not touch the original list and does not leak when a `malloc` fails (the content returned by `f` must go through `del`, exactly once, never the one of the original list). Lists also start from a node in the middle, have invalid (never read), shared or `NULL` contents, and go up to 70,000 nodes.
 
-**Undefined behaviour** (`NULL`, out-of-domain values...). Your function and libc each run in their own process and are compared: "crashes", "loops" or "returns X". A difference is shown as `!` but **is not counted** (except with `--strict`), because the `man` page does not define these cases.
+**Undefined behaviour** (`NULL`, out-of-domain values...). Your function and libc each run in their own process and are compared: "crashes", "loops" or "returns X". A difference **is not counted** and is hidden by default (`mouli -v` shows it; `--strict` counts it), because the `man` page does not define these cases. The `NULL` cases of parts 2 and 3 are hidden the same way.
 
 **Makefile.** `make` creates `libft.a`, default rule `all`, rules `$(NAME) all clean fclean re`, `cc` with `-Wall -Wextra -Werror` on each `.c`, `ar` (not `libtool`), no `-std=c99` nor `-fsanitize`, sources listed without wildcard, every function (lists included) in `libft.a`, no relink (3 times), only one `.o` rebuilt when a `.c` changes, `clean`, `fclean`, `re`.
 
@@ -161,7 +157,7 @@ Same layout as `mouli`: one line per group of checks, then **PROBLEMS** in full,
 - This is an unofficial tester: it does not replace the real moulinette or an evaluation. It is stricter on purpose.
 - Tested on Linux (glibc 2.39, gcc and clang). It is written to work on macOS too, but has not been run there yet.
 - Your libft is built by your own Makefile, with the machine's `cc`. Run `mouli` on a 42 computer to be in the moulinette's conditions: some bugs only show with one compiler (for example, a division by zero goes unnoticed with gcc but crashes with clang).
-- The `NULL` cases of parts 2 and 3 are not defined by the subject: they are shown as information, and it is up to you to defend your choice.
+- The `NULL` cases of parts 2 and 3 are not defined by the subject: `mouli -v` shows what your function does with them, and it is up to you to defend your choice.
 
 ## The subject's AI rules
 
