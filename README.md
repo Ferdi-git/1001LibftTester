@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # The 1001 Tester (mouli): libft tester for the 42 subject v19.3
+=======
+# mouli :1001 Test (testeur libft, sujet v19.3)
+>>>>>>> de440fbc802e8bb296dcde2c885758eeecdc4ede
 
 An **unofficial** tester for the 42 Libft, subject version **19.3**. Two commands:
 
